@@ -133,7 +133,7 @@ jobs:
             echo "=== Last 100 log lines of customer-service ==="
             $COMPOSE -f compose.yml logs --no-color --tail=100 customer-service || true
             
-            # 7) Kiểm tra container có chạy không; nếu không, in logs và fail
+            # 7) Kiểm tra container có chạy không; nếu không, in logs và faill
             sleep 3
             if ! $DOCKER ps --filter "name=customer-service" --filter "status=running" --format '{{.Names}}' | grep -q '^customer-service$'; then
               echo "Container not running. Recent logs:"
