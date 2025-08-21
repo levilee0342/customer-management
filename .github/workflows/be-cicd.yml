@@ -53,6 +53,23 @@ jobs:
     needs: [ "build" ]
 
     steps:
+      - name: Write Compose .env on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 3.0.104.231
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            mkdir -p ~/customer-service
+            cat > ~/customer-service/.env <<'EOF'
+            SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
+            SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
+            SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+            # SPRING_PROFILES_ACTIVE=prod
+            # SERVER_PORT=8080
+            EOF
+            chmod 600 ~/customer-service/.env
       - name: Deploy Backend Service
         uses: appleboy/ssh-action@master
         with:
@@ -112,7 +129,10 @@ jobs:
   
             echo "Containers:"
             $DOCKER ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
-  
+            
+            echo "=== Last 100 log lines of customer-service ==="
+            $COMPOSE -f compose.yml logs --no-color --tail=100 customer-service || true
+            
             # 7) Kiểm tra container có chạy không; nếu không, in logs và fail
             sleep 3
             if ! $DOCKER ps --filter "name=customer-service" --filter "status=running" --format '{{.Names}}' | grep -q '^customer-service$'; then
