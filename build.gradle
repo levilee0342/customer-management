@@ -1,0 +1,99 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
+}
+
+group = 'com.likelion'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+ext {
+	versions = [
+			mapstruct : '1.5.5.Final',
+			lombokMapstructBinding: '0.2.0',
+			jacoco   : '0.8.12' // stable version
+	]
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' // JUnit 5, Mockito, AssertJ
+	testImplementation 'org.mockito:mockito-junit-jupiter'                 // Mockito + JUnit5
+	testImplementation 'com.h2database:h2'
+
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events 'FAILED', 'SKIPPED', 'PASSED'
+		exceptionFormat 'FULL'
+		showStandardStreams = false
+	}
+	finalizedBy jacocoTestReport         // run report after finalizing test
+}
+
+jacoco {
+	toolVersion = versions.jacoco
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		html.required = true
+		xml.required  = true               // required for CI/Sonar
+		csv.required  = false
+		html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+			excludes = [
+					'com.likelion.theory_sping_data.dto.**',
+					'com.likelion.theory_sping_data.configuration.**',
+					'com.likelion.theory_sping_data.exception.**',
+					'com.likelion.theory_sping_data.Application'
+			]  // exclusion packages
+			limit {
+				counter = 'LINE'
+				value   = 'COVEREDRATIO'
+				minimum = 0.80                          // minimum coverage threshold
+			}
+		}
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

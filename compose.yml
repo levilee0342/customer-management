@@ -1,0 +1,12 @@
+services:
+  customer-service:
+    image: [your-docker-image-name]:[your-docker-image-version]
+    container_name: customer-service
+    ports:
+      - "8081:8081"
+    networks:
+      - customer-network
+
+networks:
+  customer-network:
+    external: true

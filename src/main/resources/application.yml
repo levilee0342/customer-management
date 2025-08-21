@@ -1,0 +1,13 @@
+spring:
+    datasource:
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME:[database-username]}
+        password: ${SPRING_DATASOURCE_PASSWORD:[database-password]}
+
+    jpa:
+        hibernate:
+            ddl-auto: none
+        show-sql: true
+        format_sql: true
+        database-platform: org.hibernate.dialect.MySQL8Dialect    
+
