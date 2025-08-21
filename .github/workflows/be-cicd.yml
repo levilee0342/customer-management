@@ -33,7 +33,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-
       - name: Build and Push Docker Image
         run: |
           docker build --no-cache -t $DOCKER_IMAGE:$DOCKER_TAG .
