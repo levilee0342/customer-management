@@ -1,6 +1,6 @@
 services:
   customer-service:
-    image: [your-docker-image-name]:[your-docker-image-version]
+    image: leetuan0342/my-spring-app:1.0
     container_name: customer-service
     ports:
       - "8081:8081"

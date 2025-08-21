@@ -10,7 +10,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 ext {
@@ -42,10 +42,13 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test' // JUnit 5, Mockito, AssertJ
 	testImplementation 'org.mockito:mockito-junit-jupiter'                 // Mockito + JUnit5
 	testImplementation 'com.h2database:h2'
+
 
 }
 
