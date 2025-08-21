@@ -2,7 +2,7 @@ name: CI/CD pipeline for Backend Service
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 env:
   DOCKER_IMAGE: leetuan0342/my-spring-app
