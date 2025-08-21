@@ -65,16 +65,16 @@ jobs:
             
             echo "Creating network (if not exists)..."
             echo "Currently, we re-use customer-network"
-            docker network create customer-network || true
+            sudo docker network create customer-network 
 
             echo "Stopping old container if exists..."
-            docker-compose -f compose.yml stop customer-service || true
-            docker-compose -f compose.yml rm -f customer-service || true
+            sudo docker compose -f compose.yml stop customer-service 
+            sudo docker compose -f compose.yml rm -f customer-service 
             
             echo "Pulling latest image..."
-            docker-compose -f compose.yml pull customer-service || true
+            sudo docker compose -f compose.yml pull customer-service 
             
             echo "Starting new container with correct name..."
-            docker-compose -f compose.yml up -d --remove-orphans
+            sudo docker compose -f compose.yml up -d --remove-orphans
             
             echo "Deployment completed!"
